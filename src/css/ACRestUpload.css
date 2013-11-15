@@ -1,0 +1,138 @@
+.ACRestUpload .fallbackDiv{
+	display:none;
+}
+
+.ACRestUpload .fallbackDiv .inputFile{
+	width:100%;
+}
+
+.ACRestUpload .fallbackDiv .hidden{
+	display:none;
+}
+
+.ACRestUpload .html5form .dropZone{
+	border: 2px dashed #bbb;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding: 25px;
+	text-align: center;
+	cursor: pointer;			
+}
+
+.ACRestUpload .html5form .dropZone .mainText{
+	font: 20pt bolder 'Vollkorn';
+	color: #bbb;
+}
+
+.ACRestUpload .html5form .dropZone .subText{
+	font: 12pt bold 'Vollkorn';
+	color: #bbb;
+}
+
+.dropZoneHovering{
+	background-color: rgba(0,200,0,0.1);
+}
+
+.ACRestUpload .html5form .uploadList{
+	max-height:225px;
+	overflow-y: auto;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer{
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(34,25,25,0.4);
+	-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+	-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);
+	float: left;
+	position: relative;
+	padding: 5px;
+	text-align: center;
+	font: 10pt bold 'Vollkorn';
+	margin: 5px;
+	height: 90px;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .success{
+	z-index: 99;
+	margin-left: -20px;
+	margin-top: -35px;
+	color: green;
+	display:none;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	font-size: 46px;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .error{
+	z-index: 99;
+	margin-left: -20px;
+	margin-top: -35px;
+	color: red;
+	display:none;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	font-size: 50px;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .fileName{
+	position: absolute;
+	left: 5px;
+	top: 50%;
+	text-overflow: ellipsis;
+	width: 90%;
+	white-space: nowrap;
+	overflow: hidden;
+	margin-top: -10px;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .thumbnailContainer{
+	background: #ebebeb;
+	width: 100px;
+	height: 75px;
+	padding:0px;
+	margin:0px;
+	position: relative;
+	overflow: hidden;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .thumb {
+	width: 100px;
+	height: 75px;
+	padding:0px;
+	margin:0px;
+	position: absolute;
+	left:0px;
+	top:0px;
+}
+ 
+.ACRestUpload .html5form .uploadList .uploadContainer .progressBar {
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	background-color: orange;
+	width: 0%;
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	height: 15px;
+}
+
+.ACRestUpload .html5form .uploadList .uploadContainer .progressBar.loading {
+	opacity: 1.0;
+ }
+ 
+.ACRestUpload .html5form .uploadList .uploadContainer .progressBar .percent {
+	background-color: #99ccff;
+	height: auto;
+	width: 0%;
+	margin-left: 10px;
+	margin-top: 2px;
+ }
+
+.ACRestUploadFallbackFormContainer .uploadMoreBtn{
+ 	color: navy;
+ 	text-decoration: underline;
+ 	cursor: pointer;
+ }
