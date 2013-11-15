@@ -16,21 +16,28 @@ Salesforce multiple file upload with progress bars.
 
 1. Copy the files within `./package/` into the respective folders in your project.
 2. Upload the static resource to your org.
---1. Log into Salesforce
---2. Go into Setup->Static Resources
---3. Click `New`
---4. Enter 'ACRestUpload' for the name, choose ./package/staticresources/ACRestUpload.zip for the File. 
---5. Click `Save`
+--* 1. Log into Salesforce
+--* 2. Go into Setup->Static Resources
+--* 3. Click `New`
+--* 4. Enter 'ACRestUpload' for the name, choose ./package/staticresources/ACRestUpload.zip for the File. 
+--* 5. Click `Save`
 3. Add your org's subdomain to your remote site settings.
---1. Go to Setup->Remote Site Settings
---2. Click `New Remote Site`
---3. Enter 'ACRestUpload' for Site Name, and the base of your orgs URL (ex: https://cs11.salesforce.com) in Remote Site URL.
---4. Click `Save`
+--* 1. Go to Setup->Remote Site Settings
+--* 2. Click `New Remote Site`
+--* 3. Enter 'ACRestUpload' for Site Name, and the base of your orgs URL (ex: https://cs11.salesforce.com) in Remote Site URL.
+--* 4. Click `Save`
 
-##Usage
+##Example
 See ACRestUploadExample.page for an example of usage
 
 ##Configuration
+`ACRestUploader.prepareUpload({finishedCallback: 'uploadFinished',
+                                            data: {entityId: parentId, 
+                                      			 entityType: type}},
+                                      		forceFallback: false,
+                                      		manualUpload: true,
+                                      		uploadLimit: 10);`
+
 forceFallback - Forces the fallback version of the uploader, regardless of browser compatibility.
 manualUpload - Does not start uploads immediately, requires you to call ACRestUploader.startManualUpload();
 uploadLimit - Sets a limit to the number of files that can be uploaded, defaults to 999.
@@ -55,7 +62,7 @@ In this scenario, two values are passed in the data parameter. EntityId and enti
 
 See the example upload page 'UploadTestPage.page' for further examples.
 
-#Build
+#Build Static Resources
 ============
 You could just zip the files in ./src/ then upload those to static resources.
 
