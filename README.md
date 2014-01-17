@@ -12,6 +12,8 @@ Salesforce multiple file upload with progress bars.
 * Automatic fallback for old browsers
 * Configurable
 
+![ScreenShot](acrestupload.gif?raw=true)
+
 ##Installation
 
 1. Copy the files within `./package/` into the respective folders in your project.
