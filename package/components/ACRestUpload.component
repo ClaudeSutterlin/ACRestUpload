@@ -1,0 +1,30 @@
+<apex:component controller="ACRestUploadController" allowDml="true"> 
+	<apex:attribute name="redirectUrl" type="String" description="If using the fallback, set this to ensure you're redirected to the right URL after upload"/>
+	<apex:attribute name="name" description="Name of the javascript object, defaults to ACRestUploader" type="String" required="false" assignTo="{!jsName}"/>
+    
+    <apex:includeScript value="{!URLFOR($Resource.jqueryResource, 'jQuery/jquery-1.9.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ACRestUpload, 'js/ACRestUpload.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.ACRestUpload, 'js/json3.min.js')}"/> 
+    <apex:stylesheet value="{!URLFOR($Resource.ACRestUpload, 'css/ACRestUpload.css')}"/>
+        
+    <div id="{!jsName}" class="ACRestUpload">  
+		<div class="fallbackDiv">			
+			<iframe scrolling="false" height="100%" class="fallbackFrame" name="uploaderFrame" width="100%" style="border: none;"></iframe>
+	    </div>
+	    
+	    <div class="html5form">
+	    	<input class="hidden_input" type="file" multiple="multiple" style="display:none"/>     		   	
+	    	<div class="dropZone">
+	    		<span class="mainText">Drag and Drop files</span><br/>
+	    		<span class="subText">(or click here)</span><br/>
+	    		<span class="subText uploadLimitLbl"></span>
+	    	</div>
+			<div class="uploadList"></div>
+	    </div> 
+	 </div>
+	 
+	 <script>
+   		// create my uploader
+		var {!jsName} = new ACRestUpload({selector: '#{!jsName}',session: '{!$Api.Session_ID}'});
+    </script>
+</apex:component>
