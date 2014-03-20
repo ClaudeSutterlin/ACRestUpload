@@ -40,6 +40,7 @@
 
 			// session id needs to be passed
 			self.sf_sessionId = params.session;
+			self.instanceUrl = params.instanceUrl;
 		}
 
 		self.bindFallbackFrame = function(){
@@ -273,23 +274,24 @@
 			}		
     	}
     	
+    	// the instance url is used to build the REST path, qhich should simply be the instance at salesforce
     	self.getInstanceUrl = function(){
-			var elements = location.hostname.split(".");
-            
-            var instance = null;
-            if(elements.length == 4 && elements[1] === 'my') {
-                instance = elements[0] + '.' + elements[1];
-            } else if(elements.length == 3){
-                instance = elements[0];
-            } else {
-                instance = elements[1];
-            }
-            
-            return "https://" + instance + ".salesforce.com";
+            return self.instanceUrl;
 		}
 
+		// The proxy URL has to have the community name and custom domain name
 		self.getProxyUrl = function(){
-			return location.protocol + "//" + location.hostname + "/services/proxy"
+			var proxyUrl = location.protocol + '//' + location.host;
+
+			// check for community
+			var pathComponents = location.pathname.split('/');
+			if ((pathComponents.length>1)&&(pathComponents[1]!='apex')){
+				proxyUrl += '/' + pathComponents[1];
+			}
+
+			proxyUrl += "/services/proxy";
+
+			return proxyUrl;
 		}
 	
 		// finally, initialize
@@ -376,8 +378,8 @@
 		self.fileLoaded = function(evt) {		
 			var file =  evt.target.result;
 			var url = uploader.getInstanceUrl() + '/services/apexrest/ContentUploadHandler';		
-			var proxyUrl = uploader.getProxyUrl();				
-			
+			var proxyUrl = uploader.getProxyUrl();
+
 			self.xhr = new XMLHttpRequest();
  			self.xhr.open('POST', proxyUrl, true);
  			self.xhr.setRequestHeader("Accept", "application/json");
@@ -386,7 +388,7 @@
 		    self.xhr.setRequestHeader("X-File-Name", 'test');
 
 		    // the ultimate end point
-            self.xhr.setRequestHeader('SalesforceProxy-Endpoint', url);        
+            self.xhr.setRequestHeader('SalesforceProxy-Endpoint', url);
             self.xhr.setRequestHeader("Authorization", "OAuth " + self.uploader.sf_sessionId);
             self.xhr.setRequestHeader('X-User-Agent', 'salesforce-toolkit-rest-javascript/v27.0');
             self.xhr.setRequestHeader('upload_filename', self.fileName);
