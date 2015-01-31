@@ -68,5 +68,10 @@ See the example upload page 'UploadTestPage.page' for further examples.
 ============
 You could just zip the files in ./src/ then upload those to static resources.
 
-However, this project also utilizes Grunt for automated packaging and deployment. With Node.js installed, simply run `npm install` from the command line while inside the root directory of the plugin. This will install Grunt and all necessary grunt plugins. Once that finishes, run `grunt` to minify and zip the project for use as a SalesForce static resource (./package/staticresources/).
+However, this project also utilizes Grunt for automated packaging and deployment. With Node.js installed, setup the Grunt command line tool by running:
+sudo npm install -g grunt-cli
+
+Then simply run `npm install` from the command line while inside the root directory of the plugin. This will install Grunt and all necessary grunt plugins. 
+
+Once that finishes, run `grunt` to minify and zip the project for use as a SalesForce static resource (./package/staticresources/).
 

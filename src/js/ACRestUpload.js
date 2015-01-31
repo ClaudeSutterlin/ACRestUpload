@@ -23,6 +23,7 @@
 		self.fileUploadCallback = null;
 		self.finished = false;
 		self.fallbackMode = false;
+		self.useProxy = true;
 		self.uploadLimit = 999;
 		self.fallbackPageUrl = 'apex/ACRestUploadFallbackFrame';
 		
@@ -381,14 +382,13 @@
 			var proxyUrl = uploader.getProxyUrl();
 
 			self.xhr = new XMLHttpRequest();
- 			self.xhr.open('POST', proxyUrl, true);
+
+			self.xhr.open('POST', proxyUrl, true);	
+			self.xhr.setRequestHeader('SalesforceProxy-Endpoint', url);
  			self.xhr.setRequestHeader("Accept", "application/json");
 		    self.xhr.setRequestHeader("Cache-Control", "no-cache");
 		    self.xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		    self.xhr.setRequestHeader("X-File-Name", 'test');
-
-		    // the ultimate end point
-            self.xhr.setRequestHeader('SalesforceProxy-Endpoint', url);
+		    self.xhr.setRequestHeader("X-File-Name", self.fileName);
             self.xhr.setRequestHeader("Authorization", "OAuth " + self.uploader.sf_sessionId);
             self.xhr.setRequestHeader('X-User-Agent', 'salesforce-toolkit-rest-javascript/v27.0');
             self.xhr.setRequestHeader('upload_filename', self.fileName);
