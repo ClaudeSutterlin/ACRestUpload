@@ -61,6 +61,8 @@
 	    		self.finishedCallback = cb_tmp;
 			}
 
+			self.bindEvents();
+
 			// check if we are using a manual upload process
 			if (params.manualUpload){
 				self.manualUpload = params.manualUpload;
