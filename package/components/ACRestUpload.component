@@ -2,7 +2,7 @@
     <apex:attribute name="redirectUrl" type="String" description="If using the fallback, set this to ensure you're redirected to the right URL after upload"/>
     <apex:attribute name="name" description="Name of the javascript object, defaults to ACRestUploader" type="String" required="false" assignTo="{!jsName}"/>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <apex:includeScript src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"/>
     <apex:includeScript value="{!URLFOR($Resource.ACRestUpload, 'js/ACRestUpload.min.js')}"/>
     <apex:includeScript value="{!URLFOR($Resource.ACRestUpload, 'js/json3.min.js')}"/> 
     <apex:stylesheet value="{!URLFOR($Resource.ACRestUpload, 'css/ACRestUpload.css')}"/>
