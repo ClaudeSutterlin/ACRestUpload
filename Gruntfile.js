@@ -11,7 +11,6 @@ module.exports = function(grunt) {
       dist: {
         files: {
             'dist/js/ACRestUpload.min.js': 'src/js/ACRestUpload.js',
-            'dist/js/ACRestUploadFallbackForm.min.js': 'src/js/ACRestUploadFallbackForm.js'
         }
       }
     },
