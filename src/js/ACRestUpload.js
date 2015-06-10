@@ -11,10 +11,7 @@
 		self.fileCnt = 0;
 		self.uploadingFileCnt = 0; // number of files uploading now
 		self.data = null;
-		self.forceFallback = false;
 		self.html5Form = {};
-		self.fallbackDiv = null;
-		self.fallbackForm = null;
 		self.dropZone = {};
 		self.uploadList = {};
 		self.hiddenInput = {};
@@ -22,10 +19,8 @@
 		self.finishedCallback = null;
 		self.fileUploadCallback = null;
 		self.finished = false;
-		self.fallbackMode = false;
 		self.useProxy = true;
 		self.uploadLimit = 999;
-		self.fallbackPageUrl = 'apex/ACRestUploadFallbackFrame';
 		
 		self.init = function(params){
 			// we need the id of the div
@@ -36,46 +31,14 @@
 			self.dropZone = $j(self.html5Form).children('.dropZone');
 			self.hiddenInput = $j(self.html5Form).children('.hidden_input');
 			self.uploadList = $j(self.html5Form).children('.uploadList');
-			self.fallbackDiv = $j(self.id).children('.fallbackDiv');
-			self.fallbackFrame = $j(self.fallbackDiv).children('.fallbackFrame');
 
 			// session id needs to be passed
 			self.sf_sessionId = params.session;
 			self.instanceUrl = params.instanceUrl;
 		}
 
-		self.bindFallbackFrame = function(){
-
-			var eventHandler = function(){
-				// set the json data
-				$j(self.fallbackFrame).contents().find("[id$='data']").val(JSON.stringify(self.data));
-
-				// grab the fallback form
-				self.fallbackForm = $j(self.fallbackFrame).get(0).contentWindow.fallbackForm;
-				
-		        // set the number of uploads allowed
-		        self.fallbackForm.setUploadLimit(self.uploadLimit);
-
-		        // set the manual upload
-		    	if (self.manualUpload){
-					self.fallbackForm.hideUploadButton();
-				}
-
-				// find out if the fallback finished
-		        var fallbackDidFinish = self.fallbackForm.uploadFinished;
-
-		        if (fallbackDidFinish){
-		        	self.fallbackFinished();
-		        }
-			}
-			
-			$j(self.fallbackFrame).unbind('load');
-			$j(self.fallbackFrame).bind('load', eventHandler);
-		}
-
 		self.setData = function(data){
 			self.data = data;
-			$j(self.fallbackFrame).contents().find("[id$='data']").val(JSON.stringify(self.data));
 		}
 
 		self.prepareUpload = function(params){			
@@ -97,14 +60,10 @@
 			if (typeof cb_tmp === 'function') {
 	    		self.finishedCallback = cb_tmp;
 			}
-			
-			// see if we're forcing the plain uploader
-			self.forceFallback = params.forceFallback;
-			
-			// see if we're using the fallback form, or if our browser doesnt support it
-			self.checkFallback();
 
-			// check if we are using a manual upload process, must do this after checking for fallback
+			self.bindEvents();
+
+			// check if we are using a manual upload process
 			if (params.manualUpload){
 				self.manualUpload = params.manualUpload;
 			}		
@@ -121,34 +80,8 @@
 			$j(self.html5Form).find('.uploadLimitLbl').text('max. ' + self.uploadLimit + ' ' + fileText);
 		}
 
-		self.checkFallback = function(){
-			// See if all of the File APIs are supported.		
-			var hasFileApis = (window.File && window.FileReader && window.FileList && window.Blob && supportAjaxUploadProgressEvents());
-			
-			if (!hasFileApis || this.forceFallback) {
-					// No HTML5 File support, show the fallback form and load the page
-					self.bindFallbackFrame();
-
-					this.fallbackMode = true;
-					$j(self.fallbackFrame).attr('src', self.fallbackPageUrl);
-					$j(self.fallbackDiv).show();
-
-					// hide the html5 version
-					$j(self.html5Form).hide();
-			}    
-			else{
-				self.bindEvents();	
-			}
-			
-		}
-
 		self.startManualUpload = function(){
-			if (self.fallbackMode){
-				self.fallbackForm.startManualUpload();
-			}
-			else{
-				self.startUploads();
-			}
+			self.startUploads();
 		}
 
 		// delayed upload for manual uploads
@@ -234,17 +167,9 @@
 			e.preventDefault();
 			self.hiddenInput.click();
 		}
-		
-		self.fallbackFinished = function(){
-			self.finished = true;
-			//call the callback
-			if (self.finishedCallback){
-				self.finishedCallback();
-			}
-		}
 
 		/*
-			Bind all events, depending on whether or not we're in fallback mode or not.
+			Bind all events
 			Using the event name spaces to allow for unbinding without consequences			
 		*/
 		self.bindEvents = function(){
@@ -254,13 +179,11 @@
 			self.dropZone.unbind('click.ACRestUpload');
 			self.hiddenInput.unbind('change.ACRestUpload');
 
-			if (!this.fallbackMode){
-				self.dropZone.bind('dragover.ACRestUpload', self.handleDragOver);
-				self.dropZone.bind('dragleave.ACRestUpload', self.handleDragLeave);
-				self.dropZone.bind('drop.ACRestUpload', self.handleFileSelect);	
-				self.dropZone.bind('click.ACRestUpload', self.handleClick);
-				self.hiddenInput.bind('change.ACRestUpload', self.handleHiddenInputChange);
-			}
+			self.dropZone.bind('dragover.ACRestUpload', self.handleDragOver);
+			self.dropZone.bind('dragleave.ACRestUpload', self.handleDragLeave);
+			self.dropZone.bind('drop.ACRestUpload', self.handleFileSelect);	
+			self.dropZone.bind('click.ACRestUpload', self.handleClick);
+			self.hiddenInput.bind('change.ACRestUpload', self.handleHiddenInputChange);
 		}
     	
     	self.fileClicked = function(file){

@@ -1,51 +1,50 @@
 <apex:page controller="UploadTestPageController">
-	<apex:includeScript value="{!URLFOR($Resource.jqueryResource, 'jQuery/jquery-1.9.1.min.js')}"/>
-	
-   	<apex:form >
- 		<script type="text/javascript">
-			$j = jQuery.noConflict();
-			$j(function(){
-				prepareUpload();
-			});
-			
-			function prepareUpload(){
-				// prepare the upload, initiate the data here
-				ACRestUploader.prepareUpload({ forceFallback: false,
-												 uploadLimit: 5,
-												manualUpload: true,
-											finishedCallback: 'uploadFinished',
-														data: {entityId: '001i000000858FH', 
-							   					  entityType: 'Account'}});
-			}
-			
-			// this is an example of how you might switch the data you're passing to the ContentUploadHandler
-			function updateEntity(entityId, entityType){
-				var data = ACRestUploader.data;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    <apex:form >
+        <script type="text/javascript">
+            $j = jQuery.noConflict();
+            $j(function(){
+                prepareUpload();
+            });
+            
+            function prepareUpload(){
+                // prepare the upload, initiate the data here
+                ACRestUploader.prepareUpload({ uploadLimit: 5,
+                                                manualUpload: true,
+                                            finishedCallback: 'uploadFinished',
+                                                        data: {entityId: '001i000000858FH', 
+                                                  entityType: 'Account'}});
+            }
+            
+            // this is an example of how you might switch the data you're passing to the ContentUploadHandler
+            function updateEntity(entityId, entityType){
+                var data = ACRestUploader.data;
            
-           		data.entityId = entityId;
-           		data.entityType = entityType;
-           		
-           		ACRestUploader.setData(data);
-			}
-			
-			// start the upload, we could show a spinner or something here if we wanted to
-			function startUpload(){
-				alert('Upload started');
-				ACRestUploader.startManualUpload();
-			}
-			
-			// this function is call when the upload finishes
-			function uploadFinished(){
-				alert('Upload finished, rerender your elements');
-			}
-		</script>
-   	
-   	
-		<apex:outputPanel id="dialogPanel">
-   			<c:ACRestUpload />   
-   			<apex:outputText value="{!counter}"/> 
-   			<apex:commandButton action="{!doSomething}" rerender="dialogPanel" value="Rerender Test" onComplete="prepareUpload();"/>
-   			<button type="button" onClick="startUpload();">Start Upload</button>   		
- 		</apex:outputPanel>
-   	</apex:form>
+                data.entityId = entityId;
+                data.entityType = entityType;
+                
+                ACRestUploader.setData(data);
+            }
+            
+            // start the upload, we could show a spinner or something here if we wanted to
+            function startUpload(){
+                alert('Upload started');
+                ACRestUploader.startManualUpload();
+            }
+            
+            // this function is call when the upload finishes
+            function uploadFinished(){
+                alert('Upload finished, rerender your elements');
+            }
+        </script>
+    
+    
+        <apex:outputPanel id="dialogPanel">
+            <c:ACRestUpload />   
+            <apex:outputText value="{!counter}"/> 
+            <apex:commandButton action="{!doSomething}" rerender="dialogPanel" value="Rerender Test" onComplete="prepareUpload();"/>
+            <button type="button" onClick="startUpload();">Start Upload</button>        
+        </apex:outputPanel>
+    </apex:form>
 </apex:page>
