@@ -305,8 +305,6 @@
 			// evt is an ProgressEvent.
 		    if (evt.lengthComputable) {
 		      var pct = Math.round((evt.loaded / evt.total) * 100);
-		      pct = pct / 2;
-		      
 		      self.updateProgress(pct);
 		    }
 		}
@@ -329,15 +327,18 @@
 			        self.errored(xhr.responseText);
 			    },
 			    xhr: function () {
-			        var xhr = new window.XMLHttpRequest();
-			        
-			        //Upload progress, offset by 50% for file loading vs file uploading
+			    	var xhr = new window.XMLHttpRequest();
+			        xhr.upload.addEventListener("progress", function (evt) {
+						if (evt.lengthComputable) {
+			                var percentComplete = Math.round(evt.loaded / evt.total * 100);
+			                self.updateProgress(percentComplete);
+			            }
+			        }, false);
 			        xhr.addEventListener("progress", function (evt) {
-			        	if (evt.lengthComputable) {
-							var pct = Math.round((evt.loaded / evt.total) * 100);
-							pct = 50 + (pct/2);
-							self.updateProgress(pct);
-						}
+			            if (evt.lengthComputable) {
+			                var percentComplete = Math.round(evt.loaded / evt.total * 100);
+			                self.updateProgress(percentComplete);
+			            }
 			        }, false);
 			        return xhr;
 			    },
@@ -351,7 +352,6 @@
 		            xhr.setRequestHeader('X-User-Agent', 'salesforce-toolkit-rest-javascript/v27.0');
 		            xhr.setRequestHeader('upload_filename', self.fileName);
 		            xhr.setRequestHeader('data', JSON.stringify(self.uploader.data));
-
 			    },
 			    complete: function () {
 			        self.updateProgress(100);
