@@ -51,8 +51,8 @@ finishedCallback - When all files have completely uploaded.
 fileUploadCallback - When a single file has uploaded.
 
 ##Sample usage
-- Include the component
-`<c:ACRestUpload />`
+- Include the component and set the base URL of your instance
+`<c:ACRestUpload instanceUrl="https://na15.salesforce.com"/>`
 
 - Initialize it with any data you want passed to ContentUploadHandler
 `ACRestUploader.prepareUpload({finishedCallback: 'uploadFinished',
