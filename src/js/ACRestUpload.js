@@ -295,8 +295,20 @@
 		}
 		
 		self.upload = function(){				
-			self.reader.onload = self.fileLoaded;				
+			self.reader.onload = self.fileLoaded;
+			self.reader.onprogress = self.fileProgress;
 			self.reader.readAsArrayBuffer(self.file);
+		}
+
+		//Loading progress, offset by 50% for file loading vs file uploading
+		self.fileProgress = function(evt){
+			// evt is an ProgressEvent.
+		    if (evt.lengthComputable) {
+		      var pct = Math.round((evt.loaded / evt.total) * 100);
+		      pct = pct / 2;
+		      
+		      self.updateProgress(pct);
+		    }
 		}
 		
 		self.fileLoaded = function(evt) {		
@@ -304,43 +316,51 @@
 			var url = uploader.getInstanceUrl() + '/services/apexrest/ContentUploadHandler';		
 			var proxyUrl = uploader.getProxyUrl();
 
-			self.xhr = new XMLHttpRequest();
+			$j.ajax({
+			    type: 'POST',
+			    dataType: 'json',
+			    url: proxyUrl,
+			    cache: false,
+			    async: true,
+			    data: file,
+			    processData: false,
+			    contentType: false,
+			    error: function (xhr, ajaxOptions, thrownError) {
+			        self.errored(xhr.responseText);
+			    },
+			    xhr: function () {
+			        var xhr = new window.XMLHttpRequest();
+			        
+			        //Upload progress, offset by 50% for file loading vs file uploading
+			        xhr.addEventListener("progress", function (evt) {
+			        	if (evt.lengthComputable) {
+							var pct = Math.round((evt.loaded / evt.total) * 100);
+							pct = 50 + (pct/2);
+							self.updateProgress(pct);
+						}
+			        }, false);
+			        return xhr;
+			    },
+			    beforeSend: function (xhr) {
+			        xhr.setRequestHeader('SalesforceProxy-Endpoint', url);
+		 			xhr.setRequestHeader("Accept", "application/json");
+				    xhr.setRequestHeader("Cache-Control", "no-cache");
+				    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+				    xhr.setRequestHeader("X-File-Name", self.fileName);
+		            xhr.setRequestHeader("Authorization", "OAuth " + self.uploader.sf_sessionId);
+		            xhr.setRequestHeader('X-User-Agent', 'salesforce-toolkit-rest-javascript/v27.0');
+		            xhr.setRequestHeader('upload_filename', self.fileName);
+		            xhr.setRequestHeader('data', JSON.stringify(self.uploader.data));
 
-			self.xhr.open('POST', proxyUrl, true);	
-			self.xhr.setRequestHeader('SalesforceProxy-Endpoint', url);
- 			self.xhr.setRequestHeader("Accept", "application/json");
-		    self.xhr.setRequestHeader("Cache-Control", "no-cache");
-		    self.xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		    self.xhr.setRequestHeader("X-File-Name", self.fileName);
-            self.xhr.setRequestHeader("Authorization", "OAuth " + self.uploader.sf_sessionId);
-            self.xhr.setRequestHeader('X-User-Agent', 'salesforce-toolkit-rest-javascript/v27.0');
-            self.xhr.setRequestHeader('upload_filename', self.fileName);
-            self.xhr.setRequestHeader('data', JSON.stringify(self.uploader.data));
-
-		    self.xhr.onload = function(e) {
-		    	if (self.xhr.responseText!==''){
-		    		self.result = JSON.parse(self.xhr.responseText);
-		    		
-		    		if (self.result.response == "success"){	    		
-						self.completed();
-					}
-					else{
-						log('Error: ' + self.xhr.responseText);
-						self.errored(self.result.error);
-					}
-				}
-		    };
-		    
-			self.xhr.onerror = function() {
-		    	self.errored(self.xhr.responseText);
-		    };
-		    
-		    self.xhr.upload.onprogress = function(e) {
-    			var pct = Math.round(Math.max(0, Math.min(100, (e.loaded / e.total) * 100)));
-    			self.updateProgress(pct);
-  			};
-		    
-			self.xhr.send(file);
+			    },
+			    complete: function () {
+			        self.updateProgress(100);
+			    },
+			    success: function (json) {
+			    	self.updateProgress(100);
+			        self.completed();
+			    }
+			});
 		}; 			
 		
 		self.updateProgress = function(pct){		
@@ -362,15 +382,3 @@
 		self.init();
 		return self;
 	}
-	
-	// only log errors if console is open
-	function log(msg){
-		if (typeof console !== "undefined" || typeof console.log !== "undefined") {
-			console.log(msg);
-		}		
-	}
-
-	function supportAjaxUploadProgressEvents() {
-    	var xhr = new XMLHttpRequest();
-    	return !! (xhr && ('upload' in xhr) && ('onprogress' in xhr.upload));
-	};
