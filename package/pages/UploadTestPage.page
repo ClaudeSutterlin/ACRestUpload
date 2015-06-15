@@ -41,7 +41,7 @@
     
     
         <apex:outputPanel id="dialogPanel">
-            <c:ACRestUpload />   
+            <c:ACRestUpload instanceUrl="https://na15.salesforce.com"/>   
             <apex:outputText value="{!counter}"/> 
             <apex:commandButton action="{!doSomething}" rerender="dialogPanel" value="Rerender Test" onComplete="prepareUpload();"/>
             <button type="button" onClick="startUpload();">Start Upload</button>        

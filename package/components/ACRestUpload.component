@@ -1,6 +1,7 @@
 <apex:component controller="ACRestUploadController" allowDml="true"> 
     <apex:attribute name="redirectUrl" type="String" description="If using the fallback, set this to ensure you're redirected to the right URL after upload"/>
     <apex:attribute name="name" description="Name of the javascript object, defaults to ACRestUploader" type="String" required="false" assignTo="{!jsName}"/>
+    <apex:attribute name="instanceUrl" description="Base url of your salesforce instance" type="String" required="true"/>
     
     <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"/>
     <apex:includeScript value="{!URLFOR($Resource.ACRestUpload, 'js/ACRestUpload.min.js')}"/>
@@ -22,6 +23,6 @@
      
      <script>
         // create my uploader
-        var {!jsName} = new ACRestUpload({selector: '#{!jsName}',session: '{!$Api.Session_ID}'});
+        var {!jsName} = new ACRestUpload({selector:'#{!jsName}',session:'{!$Api.Session_ID}',instanceUrl:'{!instanceUrl}'});
     </script>
 </apex:component>
